@@ -42,7 +42,7 @@ def calc_text_number(input_string : str):
     return nums
 
 
-def answer_1(content):
+def answer_2(content):
     for line in content:
         stripped = line.strip()
         nums = calc_text_number(stripped)
@@ -50,7 +50,7 @@ def answer_1(content):
         numbers_1.append(int(f"{pair[0]}{pair[-1]}"))
     return sum(numbers_1)
 
-def answer_2(content):
+def answer_1(content):
     for line in content:
         stripped = line.strip()
         nums = get_numbers(stripped)
