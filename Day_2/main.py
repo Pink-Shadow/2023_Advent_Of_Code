@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-
-
 class Game():
     def __init__(self, ID = -1):
         self.ID: int = ID
@@ -23,7 +19,6 @@ class Game():
         return False
 
     def return_product_of_minimum(self):
-        print(max(self.red) , max(self.green) , max(self.blue))
         return (max(self.red) * max(self.green) * max(self.blue))
 
     def get_id(self):
@@ -33,45 +28,31 @@ class Game():
         return f"id: {self.ID} - red: {self.red} - green: {self.green} - blue: {self.blue}"
 
 
-
+def generate_class_from_line(line):
+    stripped = line.strip()
+    splitted = stripped.split(": ")  # ["game x", "green red blue.."]
+    gameid = splitted[0].split(" ")[1]  # ["game", "3"]
+    grabs = splitted[1].split("; ")  # ["x green x blue x red", ...]
+    tmp = Game(int(gameid))
+    for set in grabs:
+        colour = set.split(", ")  # ['3 blue', ...]
+        for col in colour:
+            a = col.split(" ")  # ['3', 'blue']
+            tmp.update_count(int(a[0]), a[1])
+    return tmp
 
 if __name__ == "__main__":
-    solution = 1
     valids = []
+    products = []
     with open("puzzle_input.txt", "r") as infile:
         content = infile.readlines()
-        if solution==1:
-            for line in content:
-                stripped = line.strip()
-                splitted = stripped.split(": ") # ["game x", "green red blue.."]
-                gameid = splitted[0].split(" ")[1] # ["game", "3"]
-                grabs = splitted[1].split("; ") # ["x green x blue x red", ...]
-                tmp = Game(int(gameid))
-                for set in grabs:
-                    colour = set.split(", ") # ['3 blue', ...]
-                    for col in colour:
-                        a = col.split(" ") # ['3', 'blue']
-                        tmp.update_count(int(a[0]), a[1])
+        for line in content:
+            game = generate_class_from_line(line)
+            if game.is_valid(12, 13, 14):
+                valids.append(game)
+            products.append(game.return_product_of_minimum())
 
-                if tmp.is_valid(12, 13, 14):
-                    valids.append(tmp)
-            print(sum([game.get_id() for game in valids]))
-        else:
-            products = []
-            for line in content:
-                stripped = line.strip()
-                splitted = stripped.split(": ")  # ["game x", "green red blue.."]
-                gameid = splitted[0].split(" ")[1]  # ["game", "3"]
-                grabs = splitted[1].split("; ")  # ["x green x blue x red", ...]
-                tmp = Game(int(gameid))
-                for set in grabs:
-                    colour = set.split(", ")  # ['3 blue', ...]
-                    for col in colour:
-                        a = col.split(" ")  # ['3', 'blue']
-                        tmp.update_count(int(a[0]), a[1])
-
-
-                products.append(tmp.return_product_of_minimum())
-            print(products)
-            print(sum(products))
+    answer1 = sum([game.get_id() for game in valids])
+    answer2 = sum(products)
+    print(f"Answer star 1:\t{answer1}\nAnswer star 2:\t{answer2}")
 
